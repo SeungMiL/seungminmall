@@ -1,4 +1,6 @@
-import {Search} from '@material-ui/icons';
+import { Search } from '@material-ui/icons';
+import Badge from '@mui/material/Badge';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import React from 'react'
 import styled from 'styled-components'
 
@@ -9,26 +11,49 @@ const Container = styled.div`
 const Wrapper = styled.div`
     padding: 10px 20px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
 `
 const Left = styled.div`
     flex: 1;
+    display: flex;
+    align-items: center;
 `
 const Language = styled.span`
     font-size: 14px;
     cursor: pointer;
 `
 const SearchContainer = styled.div`
-    border: 1px solid lightgray;
+    border: 0.5px solid lightgray;
+    display: flex;
+    align-items: center;
+    margin-left: 25px;
+    padding: 5px;
+`
+
+const Input = styled.input`
+    border: none;
 `
 
 const Center = styled.div`
     flex: 1;
-
+    text-align: center;
 `
+const Logo = styled.h1`
+    font-weight: bold;
+`
+
 const Right = styled.div`
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+`
 
+const MenuItem = styled.div`
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 25px;
 `
 
 const Navbar = () => {
@@ -36,13 +61,25 @@ const Navbar = () => {
         <Container>
             <Wrapper>
                 <Left>
-                    <Language>EN</Language>
+                    <Language>KO</Language>
                     <SearchContainer>
-                        <Search/>
+                        <Input />
+                        <Search style={{color:"gray", fontSize:16}}/>
                     </SearchContainer>
                 </Left>
-                <Center>중</Center>
-                <Right>오</Right>
+                <Center>
+                    <Logo>승민몰</Logo>
+                </Center>
+                <Right>
+
+                    <MenuItem>회원가입</MenuItem>
+                    <MenuItem>로그인</MenuItem>
+                    <MenuItem>
+                        <Badge badgeContent={4} color="primary">
+                            <ShoppingCartOutlinedIcon/>
+                        </Badge>
+                    </MenuItem>
+                </Right>
             </Wrapper>
         </Container>
     )
