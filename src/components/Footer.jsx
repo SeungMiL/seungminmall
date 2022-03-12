@@ -10,6 +10,7 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 const Container = styled.div`
   display: flex;
 `;
+
 const Left = styled.div`
   flex: 1;
   display: flex;
@@ -28,7 +29,7 @@ const SocialIcon = styled.div`
   height: 40px;
   border-radius: 50%;
   color: white;
-  background-color: #${(props) => props.color};
+  background-color: #${props => props.color};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,6 +39,7 @@ const SocialIcon = styled.div`
 const Center = styled.div`
   flex: 1;
   padding: 20px;
+
 `;
 
 const Title = styled.h3`
@@ -76,6 +78,7 @@ const Payment = styled.img`
 const Footer = () => {
   return (
     <Container>
+
       <Left>
         <Logo>승민몰</Logo>
         <Desc>
@@ -107,8 +110,8 @@ const Footer = () => {
           <ListItem>악세서리</ListItem>
           <ListItem>내 계정</ListItem>
           <ListItem>배송조회</ListItem>
-          <ListItem>찜</ListItem>
-          <ListItem>찜</ListItem>
+          <ListItem>관심 상품</ListItem>
+          <ListItem>관심 상품</ListItem>
           <ListItem>Terms</ListItem>
         </List>
       </Center>
@@ -125,6 +128,7 @@ const Footer = () => {
         </ContactItem>
         <Payment src="https://i.ibb.co/Qfvn4z6/payment.png"/>
       </Right>
+
     </Container>
   );
 };

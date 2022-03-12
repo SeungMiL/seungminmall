@@ -3,7 +3,7 @@ import styled from "styled-components"
 const Container = styled.div`
     width: 100vw;
     height: 100vh;
-    background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)), url(../register.jpg) center;
+    background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)), url(../login.jpg) center;
     background-size: cover;
     display: flex;
     align-items: center;
@@ -45,7 +45,7 @@ const LinkContainer = styled.div`
 `
 
 const Link = styled.a`
-    margin: 5px 30px 5px 0px;
+    margin: 5px 10px 5px 0px;
     font-size: 12px;
     text-decoration: underline;
     cursor: pointer;
