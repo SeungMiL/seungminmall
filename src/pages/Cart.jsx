@@ -4,10 +4,14 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { mobile } from "../responsive";
+
 
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 20px;
+  ${mobile({ padding: "10px" })}
+
 `;
 
 const Title = styled.h1`
@@ -31,7 +35,10 @@ const TopButton = styled.button`
   color: ${(props) => props.type === "filled" && "white"};
 `;
 
-const TopTexts = styled.div``;
+const TopTexts = styled.div`
+  ${mobile({ display: "none" })}
+
+`;
 
 const TopText = styled.span`
   text-decoration: underline;
@@ -42,6 +49,8 @@ const TopText = styled.span`
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
+  ${mobile({ flexDirection: "column" })}
+
 `;
 const Info = styled.div`
   flex: 3;
@@ -50,6 +59,7 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
+  ${mobile({ flexDirection: "column" })}
 `;
 const ProductDetail = styled.div`
   flex: 2;
@@ -57,20 +67,31 @@ const ProductDetail = styled.div`
 `;
 const Image = styled.img`
   width: 200px;
+
 `;
 const Details = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  ${mobile({ padding: "20px 0px" })}
+  
 `;
-const ProductName = styled.span``;
-const ProductId = styled.span``;
+const ProductName = styled.span`
+  ${mobile({ marginBottom: "10px" })}
+
+`;
+const ProductId = styled.span`
+  ${mobile({ marginBottom: "10px" })}
+
+`;
 const ProductColor = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
   background-color: ${(props) => props.color};
+  ${mobile({ marginBottom: "10px" })}
+
 `;
 const ProductSize = styled.span``;
 const PriceDetail = styled.div`
@@ -89,10 +110,14 @@ const ProductAmountContainer = styled.div`
 const ProductAmount = styled.div`
     font-size: 24px;
     margin: 5px;
+  ${mobile({ margin: "5px 15px" })}
+    
 `
 const ProductPrice = styled.div`
     font-size: 30px;
     font-weight: 200;
+  ${mobile({ marginBottom: "20px" })}
+
 `
 
 const Hr = styled.hr`
