@@ -15,12 +15,15 @@ const Container = styled.div`
 const Title = styled.h1`
   font-size: 70px;
   margin-bottom: 20px;
+  ${mobile({ fontSize: "60px" })}
+
 `;
 const Description = styled.div`
     font-size: 24px;
     font-weight: 300;
     margin-bottom: 20px;
-  ${mobile({ textAlign: "center" })}
+    word-break: keep-all;
+  ${mobile({fontSize: "22px" , textAlign: "center",  })}
 
 `;
 const InputContainer = styled.div`

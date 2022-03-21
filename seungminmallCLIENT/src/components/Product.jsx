@@ -3,6 +3,8 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import { mobile } from "../responsive";
+import { Link } from "react-router-dom";
+
 
 
 const Info = styled.div`
@@ -34,7 +36,6 @@ const Container = styled.div`
 
   ${mobile({ minWidth: "300px", height: "370px" })}
 
-
   &:hover ${Info} {
     opacity: 1;
   }
@@ -47,7 +48,6 @@ const Circle = styled.div`
   background-color: white;
   position: absolute;
   ${mobile({ width: "200px", height: "200px" })}
-
 `;
 const Image = styled.img`
   height: 75%;
@@ -72,6 +72,9 @@ const Icon = styled.div`
 `;
 
 const Product = ({ item }) => {
+
+
+
   return (
     <Container>
       <Circle />
@@ -81,7 +84,9 @@ const Product = ({ item }) => {
           <ShoppingCartOutlinedIcon />
         </Icon>
         <Icon>
-          <SearchOutlinedIcon />
+          <Link to={`/product/${item._id}`}>
+            <SearchOutlinedIcon />
+          </Link>
         </Icon>
         <Icon>
           <FavoriteBorderOutlinedIcon />

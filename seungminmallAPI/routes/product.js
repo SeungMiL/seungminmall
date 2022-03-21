@@ -62,7 +62,6 @@ router.get("/find/:id", async (req, res) => {
 // 상품(전체) 가져오기(관리자)
 
 router.get("/", async (req, res) => {
-
   const qNew = req.query.new;
   const qCategory = req.query.category;
 
@@ -86,7 +85,5 @@ router.get("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
-
 
 module.exports = router;

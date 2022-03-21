@@ -5,7 +5,8 @@ import Products from "../components/Products";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
-
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 const Container = styled.div``;
 const Title = styled.h1`
@@ -18,7 +19,6 @@ const FilterContainer = styled.div`
 const Filter = styled.div`
   margin: 20px;
   ${mobile({ margin: "0px 20px", display: "flex", flexDirection: "column" })}
-
 `;
 
 const FilterText = styled.span`
@@ -26,57 +26,66 @@ const FilterText = styled.span`
   font-weight: 600;
   margin-right: 20px;
   ${mobile({ marginRight: "0px" })}
-
 `;
 
 const Select = styled.select`
-    padding: 10px;
-    margin-right: 20px;
+  padding: 10px;
+  margin-right: 20px;
   ${mobile({ margin: "10px 0px" })}
+`;
 
-`
-
-const Option = styled.option`
-
-`
+const Option = styled.option``;
 
 const ProductList = () => {
+  const location = useLocation();
+  const cat = location.pathname.split("/")[2];
+  const [filters, setFilters] = useState({});
+  const [sort, setSort] = useState("newest");
+
+  const handleFilters = (e) => {
+    const value = e.target.value;
+    setFilters({
+      ...filters,
+      [e.target.name]: value,
+    });
+  };
+
   return (
     <Container>
       <Navbar />
       <Announcement />
-      <Title>Dresses</Title>
+      <Title>{cat}</Title>
       <FilterContainer>
         <Filter>
           <FilterText>상품 옵션별정렬:</FilterText>
-          <Select>
-              <Option disabled selected>선택옵션</Option>
-              <Option>화이트</Option>
-              <Option>블랙</Option>
-              <Option>레드</Option>
-              <Option>블루</Option>
-              <Option>옐로우</Option>
-              <Option>그린</Option>
+          <Select name="color" onChange={handleFilters}>
+            <Option disabled>선택옵션</Option>
+            <Option>화이트</Option>
+            <Option>블랙</Option>
+            <Option>레드</Option>
+            <Option>블루</Option>
+            <Option>옐로우</Option>
+            <Option>그린</Option>
           </Select>
-          <Select>
-              <Option disabled selected>사이즈</Option>
-              <Option>XS</Option>
-              <Option>S</Option>
-              <Option>M</Option>
-              <Option>L</Option>
-              <Option>XL</Option>
+          <Select name="size" onChange={handleFilters}>
+            <Option disabled>사이즈</Option>
+            <Option>XS</Option>
+            <Option>S</Option>
+            <Option>M</Option>
+            <Option>L</Option>
+            <Option>XL</Option>
           </Select>
         </Filter>
         <Filter>
           <FilterText>최신/가격순 정렬:</FilterText>
-          <Select>
-              <Option selected>최신</Option>
-              <Option>높은 가격순</Option>
-              <Option>낮은 가격순</Option>
+          <Select onChange={(e) => setSort(e.target.value)}>
+            <Option value="newest">최신</Option>
+            <Option value="asc">높은 가격순</Option>
+            <Option value="desc">낮은 가격순</Option>
           </Select>
         </Filter>
       </FilterContainer>
-      <Products />
+      <Products cat={cat} filters={filters} sort={sort} />
       <Newsletter />
       <Footer />
     </Container>

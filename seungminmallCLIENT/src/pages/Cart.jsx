@@ -5,13 +5,18 @@ import Navbar from "../components/Navbar";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { mobile } from "../responsive";
+import { useSelector } from "react-redux";
+import StripeCheckout from "react-stripe-checkout";
+import { useEffect, useState } from "react";
+import { userRequest } from "../requestMethod";
+import { useNavigate } from "react-router-dom";
 
+const Key = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 20px;
   ${mobile({ padding: "10px" })}
-
 `;
 
 const Title = styled.h1`
@@ -37,7 +42,6 @@ const TopButton = styled.button`
 
 const TopTexts = styled.div`
   ${mobile({ display: "none" })}
-
 `;
 
 const TopText = styled.span`
@@ -50,7 +54,6 @@ const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
   ${mobile({ flexDirection: "column" })}
-
 `;
 const Info = styled.div`
   flex: 3;
@@ -67,7 +70,6 @@ const ProductDetail = styled.div`
 `;
 const Image = styled.img`
   width: 200px;
-
 `;
 const Details = styled.div`
   padding: 20px;
@@ -75,15 +77,13 @@ const Details = styled.div`
   flex-direction: column;
   justify-content: space-around;
   ${mobile({ padding: "20px 0px" })}
-  
 `;
 const ProductName = styled.span`
   ${mobile({ marginBottom: "10px" })}
-
 `;
 const ProductId = styled.span`
+  word-break: break-all;
   ${mobile({ marginBottom: "10px" })}
-
 `;
 const ProductColor = styled.div`
   width: 20px;
@@ -91,7 +91,6 @@ const ProductColor = styled.div`
   border-radius: 50%;
   background-color: ${(props) => props.color};
   ${mobile({ marginBottom: "10px" })}
-
 `;
 const ProductSize = styled.span``;
 const PriceDetail = styled.div`
@@ -103,28 +102,26 @@ const PriceDetail = styled.div`
 `;
 
 const ProductAmountContainer = styled.div`
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
 const ProductAmount = styled.div`
-    font-size: 24px;
-    margin: 5px;
+  font-size: 24px;
+  margin: 5px;
   ${mobile({ margin: "5px 15px" })}
-    
-`
+`;
 const ProductPrice = styled.div`
-    font-size: 30px;
-    font-weight: 200;
+  font-size: 30px;
+  font-weight: 200;
   ${mobile({ marginBottom: "20px" })}
-
-`
+`;
 
 const Hr = styled.hr`
-    background-color: #eee;
-    border: none;
-    height: 1px;
-`
+  background-color: #eee;
+  border: none;
+  height: 1px;
+`;
 
 const Summary = styled.div`
   flex: 1;
@@ -140,15 +137,11 @@ const SummaryItem = styled.div`
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
-  font-weight: ${props=>props.type === "total" && "500"};
-  font-size: ${props=>props.type === "total" && "24px"};
+  font-weight: ${(props) => props.type === "total" && "500"};
+  font-size: ${(props) => props.type === "total" && "24px"};
 `;
-const SummaryItemText = styled.span`
-  
-`;
-const SummaryItemPrice = styled.span`
-  
-`;
+const SummaryItemText = styled.span``;
+const SummaryItemPrice = styled.span``;
 
 const Button = styled.button`
   width: 100%;
@@ -158,8 +151,28 @@ const Button = styled.button`
   font-weight: 600;
 `;
 
-
 const Cart = () => {
+  const cart = useSelector((state) => state.cart);
+  const [stripeToken, setStripeToken] = useState(null);
+  const navigate = useNavigate();
+
+  const onToken = (token) => {
+    setStripeToken(token);
+  };
+
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        const res = await userRequest.post("/checkout/payment", {
+          tokenId: stripeToken.id,
+          amount: cart.total * 100,
+        });
+        navigate("/success", { state: res.data });
+      } catch (err) {}
+    };
+    stripeToken && cart.total >= 1 && makeRequest();
+  }, [stripeToken, cart.total, navigate]);
+
   return (
     <Container>
       <Navbar />
@@ -169,40 +182,45 @@ const Cart = () => {
         <Top>
           <TopButton>쇼핑 계속하기</TopButton>
           <TopTexts>
-            <TopText>장바구니(2)</TopText>
+            <TopText>장바구니({cart.quantity})</TopText>
             <TopText>관심상품(0)</TopText>
           </TopTexts>
           <TopButton type="filled">바로 구매</TopButton>
         </Top>
         <Bottom>
           <Info>
-            <Product>
-              <ProductDetail>
-                <Image src="../product1.png" />
-                <Details>
-                  <ProductName>
-                    <b>상품명:</b>VALENTINE'S DAY 22 타이다이 후디 와이드핏 레드
-                  </ProductName>
-                  <ProductId>
-                    <b>ID:</b> 654321987654
-                  </ProductId>
-                  <ProductColor color="red" />
-                  <ProductSize>
-                    <b>사이즈:</b> L
-                  </ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                <RemoveIcon /> 
-                  <ProductAmount>1</ProductAmount>
-                  <AddIcon />
-                </ProductAmountContainer>
-                <ProductPrice>$ 30</ProductPrice>
-              </PriceDetail>
-            </Product>
-            <Hr/>
-            <Product>
+            {cart.products?.map((product) => (
+              <Product>
+                <ProductDetail>
+                  <Image src={product.img} />
+                  <Details>
+                    <ProductName>
+                      <b>상품명:</b>
+                      {product.title}
+                    </ProductName>
+                    <ProductId>
+                      <b>ID:</b> {product._id}
+                    </ProductId>
+                    <ProductColor color={product.color} />
+                    <ProductSize>
+                      <b>사이즈:</b> {product.size}
+                    </ProductSize>
+                  </Details>
+                </ProductDetail>
+                <PriceDetail>
+                  <ProductAmountContainer>
+                    <RemoveIcon />
+                    <ProductAmount>{product.quantity}</ProductAmount>
+                    <AddIcon />
+                  </ProductAmountContainer>
+                  <ProductPrice>
+                    $ {product.price * product.quantity}
+                  </ProductPrice>
+                </PriceDetail>
+              </Product>
+            ))}
+            <Hr />
+            {/* <Product>
               <ProductDetail>
                 <Image src="../product2.png" />
                 <Details>
@@ -220,33 +238,44 @@ const Cart = () => {
               </ProductDetail>
               <PriceDetail>
                 <ProductAmountContainer>
-                <RemoveIcon />  
+                  <RemoveIcon />
                   <ProductAmount>1</ProductAmount>
-                <AddIcon />
+                  <AddIcon />
                 </ProductAmountContainer>
                 <ProductPrice>$ 50</ProductPrice>
               </PriceDetail>
-            </Product>
+            </Product> */}
           </Info>
           <Summary>
-              <SummaryTitle>주문내역</SummaryTitle>
-              <SummaryItem>
-                  <SummaryItemText>소계</SummaryItemText>
-                  <SummaryItemPrice>$ 80</SummaryItemPrice>
-              </SummaryItem>
-              <SummaryItem>
-                  <SummaryItemText>배송비</SummaryItemText>
-                  <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-              </SummaryItem>
-              <SummaryItem>
-                  <SummaryItemText>배송할인</SummaryItemText>
-                  <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-              </SummaryItem>
-              <SummaryItem type="total">
-                  <SummaryItemText >총액</SummaryItemText>
-                  <SummaryItemPrice>$ 80</SummaryItemPrice>
-              </SummaryItem>
+            <SummaryTitle>주문내역</SummaryTitle>
+            <SummaryItem>
+              <SummaryItemText>소계</SummaryItemText>
+              <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
+            </SummaryItem>
+            <SummaryItem>
+              <SummaryItemText>배송비</SummaryItemText>
+              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+            </SummaryItem>
+            <SummaryItem>
+              <SummaryItemText>배송할인</SummaryItemText>
+              <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+            </SummaryItem>
+            <SummaryItem type="total">
+              <SummaryItemText>총액</SummaryItemText>
+              <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
+            </SummaryItem>
+            <StripeCheckout
+              name="승민몰"
+              image="https://user-images.githubusercontent.com/89256060/159132430-8db5ddf6-7da2-42c9-9081-278262c2d118.png"
+              billingAddress
+              shippingAddress
+              description={`총 결제금액 $${cart.total} 입니다`}
+              amount={cart.total * 100}
+              token={onToken}
+              stripeKey={Key}
+            >
               <Button>결제 바로하기</Button>
+            </StripeCheckout>
           </Summary>
         </Bottom>
       </Wrapper>

@@ -23,9 +23,9 @@ export const sliderItems = [
 ];
 
 export const categories = [
-  { id: 1, img: "../categories1.jpg", title: "MD CHOICE" },
-  { id: 2, img: "../categories6.jpg", title: "NEW ARRIVAL" },
-  { id: 3, img: "../categories4.jpg", title: "BEST ITEM" },
+  { id: 1, img: "../categories1.jpg", title: "MD CHOICE", cat:"women" },
+  { id: 2, img: "../categories6.jpg", title: "NEW ARRIVAL", cat:"coat"  },
+  { id: 3, img: "../categories4.jpg", title: "BEST ITEM", cat:"jeans"  },
 ];
 
 
